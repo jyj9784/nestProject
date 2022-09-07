@@ -1,13 +1,17 @@
-import { Body, Controller, Post, Req, UseGuards, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Post, Req, UseFilters, UseGuards,UseInterceptors, ValidationPipe } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { ApiOperation, ApiTags, ApiResponse } from '@nestjs/swagger';
 import { AuthCredentialsDto } from './dto/auth-credential.dto';
 import { GetUser } from './get-user.decorator';
 import { User } from './user.entity';
+import { HttpExceptionFilter } from 'src/common/exceptions/http-exception.filter';
+import { SuccessInterceptor } from 'src/common/interceptors/success.interceptor';
 
 @ApiTags('auth')
+@UseInterceptors(SuccessInterceptor)
 @Controller('api/auth')
+@UseFilters(HttpExceptionFilter)
 export class AuthController {
     constructor( private authService: AuthService){}
 
